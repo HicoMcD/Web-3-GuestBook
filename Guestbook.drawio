@@ -1,0 +1,46 @@
+<mxfile host="65bd71144e">
+    <diagram id="hqW7odHjq5-2o6Mjn52Z" name="Page-1">
+        <mxGraphModel dx="1150" dy="655" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.containers.browserWindow;rSize=0;strokeColor=#666666;strokeColor2=#008cff;strokeColor3=#c4c4c4;mainText=,;recursiveResize=0;" vertex="1" parent="1">
+                    <mxGeometry x="10" y="110" width="940" height="740" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="" style="whiteSpace=wrap;html=1;" vertex="1" parent="2">
+                    <mxGeometry x="10" y="120" width="920" height="580" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="Page 1" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.containers.anchor;fontSize=17;fontColor=#666666;align=left;" vertex="1" parent="2">
+                    <mxGeometry x="60" y="12" width="110" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="https://www.guestbook.io" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.containers.anchor;rSize=0;fontSize=17;fontColor=#666666;align=left;" vertex="1" parent="2">
+                    <mxGeometry x="130" y="60" width="250" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="Blockchain Guestbook&lt;br&gt;Leave a message in my Sepolia Testnet Guestbook" style="whiteSpace=wrap;html=1;" vertex="1" parent="2">
+                    <mxGeometry x="30" y="130" width="880" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="Connect Wallet" style="whiteSpace=wrap;html=1;" vertex="1" parent="2">
+                    <mxGeometry x="410" y="220" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="Current Connected Address: 0x" style="whiteSpace=wrap;html=1;align=left;" vertex="1" parent="2">
+                    <mxGeometry x="50" y="280" width="850" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="Type Message for Guestbook:&amp;nbsp;" style="whiteSpace=wrap;html=1;align=left;" vertex="1" parent="2">
+                    <mxGeometry x="50" y="350" width="850" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="" style="whiteSpace=wrap;html=1;" vertex="1" parent="2">
+                    <mxGeometry x="230" y="370" width="560" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="" style="whiteSpace=wrap;html=1;" vertex="1" parent="2">
+                    <mxGeometry x="50" y="420" width="850" height="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="Guest Address: 0x&lt;br&gt;Message Signed:" style="whiteSpace=wrap;html=1;verticalAlign=top;" vertex="1" parent="2">
+                    <mxGeometry x="70" y="440" width="160" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="Guest Address: 0x&lt;br&gt;Message Signed:" style="whiteSpace=wrap;html=1;verticalAlign=top;" vertex="1" parent="2">
+                    <mxGeometry x="270" y="440" width="160" height="200" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
