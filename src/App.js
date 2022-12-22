@@ -2,12 +2,18 @@ import './App.css';
 import { ethers } from "ethers";
 // import detectEthereumProvider from '@metamask/detect-provider';
 // import { connect } from './GetBlockchain';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Component } from 'react';
+
+let guestMessages = [];
 
 function App() {
     const [address, setAddress] = useState('0x...')
+    const [provider, setProvider] = useState();
     const [signer, setSigner] = useState('');
     const [contract, setContract] = useState('');
+    const [guestCount, setGuestCount] = useState(0);
+    const [message, setMessage] = useState('');
+
 
     const connect = async () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum); //await detectEthereumProvider();
@@ -18,7 +24,7 @@ function App() {
 
         setAddress(account);
         setSigner(signer);
-        console.log(account)
+        // console.log(account)
     }
 
     const handleAccountsChanged = (accounts) => {
@@ -31,75 +37,107 @@ function App() {
     }
 
     const getContract = () => {
-        const ethersProvider = new ethers.providers.Web3Provider(window.ethereum);//new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545/");
+        const provider = new ethers.providers.Web3Provider(window.ethereum);//new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545/");
         const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
         const contractABI = [
             "function sign(string memory _message)",
             "function getGuestCount() public view returns (uint)",
             "function getGuests(uint id) public view returns (tuple(address sender, string message))",
-            // "function getGuests(uint id) public view returns (tuple(address sender, string message) guest)"
-
+            "event NewGuest(uint guestId, address sender, string message)",
         ];
+
         let contract = new ethers.Contract(
             contractAddress,
             contractABI,
-            ethersProvider
+            provider
           )
-        //   console.log(ethersProvider);
-          setContract(contract);
+
+        setProvider(provider)
+        setContract(contract);
     }
 
-    // console.log(ethers);
 
     useEffect(() => {
-        getContract();
-        // console.log(contract)
-    }, [])
+        ( async () => {
+            getContract();
+            getGuests();
+        })()
 
-    // useEffect( () => {
-    //     ( async () => {
-    //       const address = await connect()
-    //       console.log(address)
-    //     })()
-    
-    //   }, [])
+    }, [guestCount])
 
-    const signMessage = async () => {
+    const signMessage = async (event) => {
+        event.preventDefault();
         const contractWithSigner = contract.connect(signer);
-        const tx = await contractWithSigner.sign('aweaweawe')
+        let tx = await contractWithSigner.sign(message)
         console.log(await tx);
+        setMessage('');
     }
 
     const getGuestCount = async () => {
-        // console.log(await contract.getGuestCount())
+
         const guestCountBN = await contract.getGuestCount();
         const guestCount = guestCountBN.toString();
-        // console.log(ethers.BigNumber.from(guestCount))
-        // const count = await ethers.utils.BigNumber.from(guestCount)
-        console.log(guestCount);
+
+        setGuestCount(guestCount);
     }
 
     const getGuests = async () => {
-        const getGuests = await contract.getGuests(0);
-        console.log(getGuests.sender);
-        console.log(getGuests.message);
 
+        for (let i = 1; i <= guestCount; i++) {
+            // console.log(await contract.getGuests(i));
+            let guests = await contract.getGuests(i);
+            guestMessages.push(guests)
+        }
+    }
+    
+    const filter = {
+        address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+        topics: [
+            // the name of the event, parnetheses containing the data type of each event, no spaces
+            // utils.id("NewGuest(uint, address, string)")
+        ]
+    }
+
+    if(contract) {
+            getGuestCount();
+            // getGuests();
+            provider.on(filter, () => {
+                getGuestCount();
+            })
+    };
+
+    const handleChange = (event) => {
+        // event.preventDefault()
+        setMessage(event.target.value);
     }
 
     return (
-        <div>
-            <h1> Blockchain Guestbook </h1>
+        <div className='container'>
+            <h1> Web3 Guestbook </h1>
             <p>Leave a message in my Sepolia Testnet Guestbook</p>
-            <button onClick={signMessage}>sign</button>
-            <button onClick={getGuestCount}>getGuestCount</button>
-            <button onClick={getGuests}>getGuests</button>
+            <div>Amount of Guests who has left a message: {guestCount}</div>
             <button onClick={connect}>Connect Wallet</button>
+
             <h4>Current connected Address: {address}</h4>
-            <form>
+            <form onSubmit={signMessage}>
                 <label>Type message for Guestbook</label>
-                <input />
+                <input value={message} onChange={handleChange} />
                 <button>Sign message for Guestbook</button>
             </form>
+            <div>
+                CARDS
+                {guestMessages.map((msgs, i, arr) => {
+                    // console.log(msgs[1])
+                    return (
+                        <div key={i}>
+                            <div>Guestbook Entry</div>
+                            <div>{msgs[0]}</div>
+                            <div>{msgs[1]}</div>
+                            <br />
+                        </div>
+                    )
+                })}
+            </div>
         </div>
     )
 }
