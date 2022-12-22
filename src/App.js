@@ -1,8 +1,7 @@
 import './App.css';
 import { ethers } from "ethers";
 // import detectEthereumProvider from '@metamask/detect-provider';
-// import { connect } from './GetBlockchain';
-import { useState, useEffect, Component } from 'react';
+import { useState, useEffect } from 'react';
 
 let guestMessages = [];
 
@@ -13,6 +12,7 @@ function App() {
     const [contract, setContract] = useState('');
     const [guestCount, setGuestCount] = useState(0);
     const [message, setMessage] = useState('');
+    // const [guestMessages, setGuestMessages] = useState([]);
 
 
     const connect = async () => {
@@ -37,8 +37,8 @@ function App() {
     }
 
     const getContract = () => {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);//new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545/");
-        const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+        const provider = new ethers.providers.Web3Provider(window.ethereum  || 'http://localhost:8545');//new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545/");
+        const contractAddress = "0x547382C0D1b23f707918D3c83A77317B71Aa8470" //"0x5FbDB2315678afecb367f032d93F642f64180aa3";
         const contractABI = [
             "function sign(string memory _message)",
             "function getGuestCount() public view returns (uint)",
@@ -52,18 +52,25 @@ function App() {
             provider
           )
 
-        setProvider(provider)
+        // setProvider(provider)
         setContract(contract);
     }
 
 
     useEffect(() => {
         ( async () => {
-            getContract();
-            getGuests();
+
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            setProvider(provider);
+
+            if(provider) {
+                getContract();
+                getGuests();  
+            }
+
         })()
 
-    }, [guestCount])
+    }, [guestCount,signer])
 
     const signMessage = async (event) => {
         event.preventDefault();
@@ -87,11 +94,12 @@ function App() {
             // console.log(await contract.getGuests(i));
             let guests = await contract.getGuests(i);
             guestMessages.push(guests)
+            // setGuestMessages(guests);
         }
     }
     
     const filter = {
-        address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+        address: "0x547382C0D1b23f707918D3c83A77317B71Aa8470",//"0x5FbDB2315678afecb367f032d93F642f64180aa3",
         topics: [
             // the name of the event, parnetheses containing the data type of each event, no spaces
             // utils.id("NewGuest(uint, address, string)")
@@ -110,7 +118,7 @@ function App() {
         // event.preventDefault()
         setMessage(event.target.value);
     }
-
+    // console.log(provider)
     return (
         <div className='container'>
             <h1> Web3 Guestbook </h1>
@@ -120,19 +128,17 @@ function App() {
 
             <h4>Current connected Address: {address}</h4>
             <form onSubmit={signMessage}>
-                <label>Type message for Guestbook</label>
+                <label>Message for the Guestbook</label>
                 <input value={message} onChange={handleChange} />
-                <button>Sign message for Guestbook</button>
+                <button>Sign message</button>
             </form>
-            <div>
-                CARDS
-                {guestMessages.map((msgs, i, arr) => {
-                    // console.log(msgs[1])
+            <div >
+                {guestMessages.map((msgs, i) => {
                     return (
-                        <div key={i}>
-                            <div>Guestbook Entry</div>
-                            <div>{msgs[0]}</div>
-                            <div>{msgs[1]}</div>
+                        <div className='card' key={i}>
+                            <div>Guestbook Entry {i + 1}</div>
+                            <div>{msgs['sender']}</div>
+                            <div>{msgs['message']}</div>
                             <br />
                         </div>
                     )

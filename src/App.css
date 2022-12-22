@@ -6,3 +6,12 @@ body {
   display: grid;
   border: solid 3px;
 }
+
+.card {
+  position: relative;
+  border: 1px solid lightgray;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px;
+  box-shadow: 0px 3px 4px lightgray;
+}
