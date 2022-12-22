@@ -117,6 +117,13 @@ function App() {
         setMessage(event.target.value);
     }
 
+    const to = () => {
+        setTimeout(() => {
+            connect()
+        }, 1000)
+    }
+    to()
+
     // console.log(provider)
     return (
         <div className='container'>
