@@ -12,8 +12,6 @@ function App() {
     const [contract, setContract] = useState('');
     const [guestCount, setGuestCount] = useState(0);
     const [message, setMessage] = useState('');
-    // const [guestMessages, setGuestMessages] = useState([]);
-
 
     const connect = async () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum); //await detectEthereumProvider();
@@ -70,7 +68,8 @@ function App() {
 
         })()
 
-    }, [guestCount,signer])
+    }, [guestCount])
+    
 
     const signMessage = async (event) => {
         event.preventDefault();
@@ -88,16 +87,15 @@ function App() {
         setGuestCount(guestCount);
     }
 
-    const getGuests = async () => {
+    const getGuests = async (getGuestCount) => {
 
         for (let i = 1; i <= guestCount; i++) {
             // console.log(await contract.getGuests(i));
             let guests = await contract.getGuests(i);
             guestMessages.push(guests)
-            // setGuestMessages(guests);
         }
     }
-    
+
     const filter = {
         address: "0x547382C0D1b23f707918D3c83A77317B71Aa8470",//"0x5FbDB2315678afecb367f032d93F642f64180aa3",
         topics: [
@@ -107,41 +105,44 @@ function App() {
     }
 
     if(contract) {
+        getGuestCount();
+        // getGuests();
+        provider.on(filter, () => {
             getGuestCount();
-            // getGuests();
-            provider.on(filter, () => {
-                getGuestCount();
-            })
+        })
+        // connect()
     };
 
     const handleChange = (event) => {
-        // event.preventDefault()
         setMessage(event.target.value);
     }
+
     // console.log(provider)
     return (
         <div className='container'>
             <h1> Web3 Guestbook </h1>
-            <p>Leave a message in my Sepolia Testnet Guestbook</p>
-            <div>Amount of Guests who has left a message: {guestCount}</div>
+            <h3>Leave a message in my Sepolia Testnet Guestbook</h3>
+            <h2>Amount of Guests who has left a message: {guestCount}</h2>
+            <label>(connect wallet to see messages)</label>
             <button onClick={connect}>Connect Wallet</button>
-
             <h4>Current connected Address: {address}</h4>
             <form onSubmit={signMessage}>
                 <label>Message for the Guestbook</label>
-                <input value={message} onChange={handleChange} />
-                <button>Sign message</button>
+                <br />
+                <input placeholder='Write a nice message' value={message} onChange={handleChange} />
+                <button>Sign Guestbook</button>
             </form>
-            <div >
-                {guestMessages.map((msgs, i) => {
-                    return (
-                        <div className='card' key={i}>
-                            <div>Guestbook Entry {i + 1}</div>
-                            <div>{msgs['sender']}</div>
-                            <div>{msgs['message']}</div>
-                            <br />
-                        </div>
-                    )
+            <div className='cards' >
+                {        
+                guestMessages.map((msgs, i) => {
+                return (
+                    <div className='card' key={i}>
+                        <h4>Guestbook Entry </h4>
+                        <label>Guest Address: {msgs['sender']}</label>
+                        <h2>{msgs['message']}</h2>
+                        <br />
+                    </div>
+                )
                 })}
             </div>
         </div>
